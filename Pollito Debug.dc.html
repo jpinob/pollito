@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#0d0e12;}
+  ::selection{background:#FFD83D;color:#0d0e12;}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-1.5deg);}50%{transform:translateY(-14px) rotate(1.5deg);}}
+  @keyframes blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+  @keyframes dotpulse{0%{opacity:.25;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}100%{opacity:.25;transform:translateY(0);}}
+  @keyframes popin{0%{opacity:0;transform:translateY(8px) scale(.96);}100%{opacity:1;transform:translateY(0) scale(1);}}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.12) 0px,rgba(0,0,0,0.12) 1px,transparent 1px,transparent 3px);opacity:.45;}
+  ::-webkit-scrollbar{width:12px;height:12px;}
+  ::-webkit-scrollbar-track{background:#15171e;}
+  ::-webkit-scrollbar-thumb{background:#2a2e3a;border:2px solid #15171e;}
+  ::-webkit-scrollbar-thumb:hover{background:#FFD83D;}
+</style>
+</helmet>
+<div style="font-family:'JetBrains Mono',monospace;color:#e6e8ee;background:#0d0e12;min-height:100vh;overflow-x:hidden;position:relative;background-image:radial-gradient(circle at 50% 0%,rgba(255,216,61,0.05),transparent 55%);">
+
+  <nav style="position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:16px;padding:0 18px;height:58px;background:#15171e;border-bottom:2px solid #2a2e3a;flex-wrap:wrap;">
+    <div style="display:flex;gap:7px;align-items:center;">
+      <span style="width:11px;height:11px;background:#ff5f57;border:1px solid #00000055;"></span>
+      <span style="width:11px;height:11px;background:#febc2e;border:1px solid #00000055;"></span>
+      <span style="width:11px;height:11px;background:#28c840;border:1px solid #00000055;"></span>
+    </div>
+    <div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:11px;cursor:pointer;">
+      <div style="width:30px;height:30px;flex:none;">{{ chick }}</div>
+      <span style="font-family:'Press Start 2P';font-size:11px;color:#FFD83D;letter-spacing:.5px;">pollito<span style="color:#6cb6ff;">.debug()</span></span>
+    </div>
+    <div style="flex:1;min-width:8px;"></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+        <button onClick="{{ item.go }}" style="{{ item.style }}" style-hover="transform:translate(-1px,-1px);box-shadow:4px 4px 0 #000;">{{ item.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;border:2px solid #2a2e3a;box-shadow:3px 3px 0 #000;margin-left:4px;">
+      <button onClick="{{ setEs }}" style="{{ esStyle }}">ES</button>
+      <button onClick="{{ setEn }}" style="{{ enStyle }}">EN</button>
+      <button onClick="{{ setSv }}" style="{{ svStyle }}">SV</button>
+    </div>
+  </nav>
+
+  <main>
+  <!-- ===================== HOME ===================== -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <section style="max-width:1180px;margin:0 auto;padding:clamp(36px,7vw,82px) 24px 50px;display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:clamp(32px,5vw,56px);align-items:center;">
+      <div>
+        <div style="font-family:'Press Start 2P';font-size:10px;color:#5c6370;margin-bottom:22px;">{{ t.heroKicker }}</div>
+        <h1 style="font-family:'VT323',monospace;font-size:clamp(54px,8vw,104px);line-height:.86;margin:0 0 22px;color:#e6e8ee;text-wrap:balance;">{{ t.heroTitleA }}<span style="color:#FFD83D;">{{ t.heroTitleB }}</span><span style="display:inline-block;width:.5ch;height:.78em;background:#FFD83D;margin-left:.08em;transform:translateY(.08em);animation:blink 1.05s step-end infinite;"></span></h1>
+        <p style="font-size:clamp(15px,1.5vw,17px);line-height:1.7;color:#a7adba;max-width:46ch;margin:0 0 30px;">{{ t.heroSub }}</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <button onClick="{{ goChat }}" style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:#0d0e12;background:#FFD83D;border:2px solid #FFD83D;padding:14px 24px;cursor:pointer;box-shadow:5px 5px 0 #000;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;">🐤 {{ t.ctaChat }}</button>
+          <button onClick="{{ goWhat }}" style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:#FFD83D;background:transparent;border:2px solid #2a2e3a;padding:14px 24px;cursor:pointer;box-shadow:5px 5px 0 #000;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;border-color:#FFD83D;">{{ t.ctaWhat }}</button>
+        </div>
+        <div style="margin-top:30px;font-size:12px;color:#5c6370;font-family:'JetBrains Mono';letter-spacing:.3px;">{{ t.statsLine }}</div>
+      </div>
+      <div style="position:relative;display:flex;justify-content:center;align-items:flex-end;min-height:360px;">
+        <div style="position:absolute;top:6px;right:8px;background:#15171e;border:2px solid #2a2e3a;box-shadow:4px 4px 0 #000;padding:10px 14px;font-size:13px;color:#FFD83D;z-index:3;animation:floaty 4.6s ease-in-out infinite;">{{ t.heroBubble }}<span style="position:absolute;bottom:-9px;left:24px;width:12px;height:12px;background:#15171e;border-right:2px solid #2a2e3a;border-bottom:2px solid #2a2e3a;transform:rotate(45deg);"></span></div>
+        <div style="width:clamp(170px,24vw,250px);position:absolute;top:34px;left:50%;transform:translateX(-50%);z-index:2;animation:floaty 4s ease-in-out infinite;">{{ chick }}</div>
+        <div style="width:100%;max-width:420px;margin-top:150px;background:#15171e;border:2px solid #2a2e3a;box-shadow:7px 7px 0 #000;">
+          <div style="display:flex;align-items:center;gap:7px;padding:9px 12px;border-bottom:2px solid #2a2e3a;background:#1c1f29;">
+            <span style="width:9px;height:9px;background:#ff5f57;"></span><span style="width:9px;height:9px;background:#febc2e;"></span><span style="width:9px;height:9px;background:#28c840;"></span>
+            <span style="margin-left:6px;font-size:11px;color:#5c6370;">debugger.js</span>
+          </div>
+          <pre style="margin:0;padding:16px 16px 18px;font-family:'JetBrains Mono';font-size:12.5px;line-height:1.75;white-space:pre;overflow-x:auto;color:#e6e8ee;"><span style="color:#5c6370;">// pollito escucha…</span>
+<span style="color:#6cb6ff;">function</span> <span style="color:#b392f0;">debug</span>(<span style="color:#FF9E7A;">yo</span>) {
+  <span style="color:#6cb6ff;">const</span> pollito = <span style="color:#6cb6ff;">new</span> <span style="color:#FFD83D;">Pollito</span>();
+  pollito.<span style="color:#b392f0;">escucha</span>(yo.problema);
+  <span style="color:#6cb6ff;">while</span> (!yo.entiendes) {
+    yo.<span style="color:#b392f0;">explica</span>(<span style="color:#FF9E7A;">"línea por línea"</span>);
+  }
+  <span style="color:#6cb6ff;">return</span> yo.solucion; <span style="color:#5c6370;">// elay 🐤</span>
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <section style="max-width:1180px;margin:0 auto;padding:46px 24px;">
+      <div style="font-family:'Press Start 2P';font-size:10px;color:#5c6370;margin-bottom:14px;">{{ t.howKicker }}</div>
+      <h2 style="font-family:'VT323';font-size:clamp(36px,5vw,58px);line-height:.92;margin:0 0 6px;color:#e6e8ee;">{{ t.howTitle }}</h2>
+      <p style="color:#5c6370;font-size:14px;margin:0 0 34px;">{{ t.howSub }}</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+          <div style="background:#15171e;border:2px solid #2a2e3a;box-shadow:5px 5px 0 #000;padding:26px 24px;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;border-color:#FFD83D;">
+            <div style="font-family:'Press Start 2P';font-size:26px;color:#FFD83D;margin-bottom:18px;line-height:1;">{{ s.k }}</div>
+            <h3 style="font-family:'VT323';font-size:30px;line-height:1;margin:0 0 10px;color:#e6e8ee;">{{ s.t }}</h3>
+            <p style="font-size:13.5px;line-height:1.65;color:#a7adba;margin:0;">{{ s.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1180px;margin:0 auto;padding:46px 24px;">
+      <div style="font-family:'Press Start 2P';font-size:10px;color:#5c6370;margin-bottom:14px;">{{ t.featKicker }}</div>
+      <h2 style="font-family:'VT323';font-size:clamp(36px,5vw,58px);line-height:.92;margin:0 0 6px;color:#e6e8ee;">{{ t.featTitle }}</h2>
+      <p style="color:#a7adba;font-size:14.5px;margin:0 0 34px;">{{ t.featSub }}</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;">
+        <sc-for list="{{ features }}" as="f" hint-placeholder-count="6">
+          <div style="background:#15171e;border:2px solid #2a2e3a;box-shadow:5px 5px 0 #000;padding:24px;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;border-color:#3a3f4f;">
+            <div style="width:46px;height:46px;display:grid;place-items:center;background:#0d0e12;border:2px solid #FFD83D;color:#FFD83D;font-family:'JetBrains Mono';font-weight:700;font-size:16px;box-shadow:3px 3px 0 #F0B429;margin-bottom:16px;">{{ f.i }}</div>
+            <h3 style="font-family:'VT323';font-size:27px;line-height:1;margin:0 0 8px;color:#e6e8ee;">{{ f.t }}</h3>
+            <p style="font-size:13px;line-height:1.6;color:#a7adba;margin:0;">{{ f.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1180px;margin:0 auto;padding:46px 24px 30px;">
+      <div style="font-family:'Press Start 2P';font-size:10px;color:#5c6370;margin-bottom:14px;">{{ t.testiKicker }}</div>
+      <h2 style="font-family:'VT323';font-size:clamp(36px,5vw,58px);line-height:.92;margin:0 0 30px;color:#e6e8ee;">{{ t.testiTitle }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;">
+        <sc-for list="{{ testimonials }}" as="q" hint-placeholder-count="3">
+          <div style="background:#15171e;border:2px solid #2a2e3a;box-shadow:5px 5px 0 #000;padding:24px;display:flex;flex-direction:column;gap:18px;">
+            <p style="font-size:14.5px;line-height:1.6;color:#e6e8ee;margin:0;flex:1;">{{ q.t }}</p>
+            <div style="display:flex;align-items:center;gap:11px;border-top:2px solid #2a2e3a;padding-top:14px;">
+              <div style="width:30px;height:30px;flex:none;">{{ chick }}</div>
+              <div><div style="font-size:13px;color:#FFD83D;font-weight:600;">{{ q.name }}</div><div style="font-size:11.5px;color:#5c6370;">{{ q.role }}</div></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="max-width:1180px;margin:0 auto;padding:30px 24px 70px;">
+      <div style="background:#15171e;border:2px solid #FFD83D;box-shadow:8px 8px 0 #000;padding:clamp(32px,5vw,52px);text-align:center;position:relative;overflow:hidden;">
+        <div style="width:90px;height:90px;margin:0 auto 18px;animation:floaty 3.6s ease-in-out infinite;">{{ chick }}</div>
+        <h2 style="font-family:'VT323';font-size:clamp(34px,5vw,52px);line-height:.95;margin:0 0 22px;color:#e6e8ee;">{{ t.ctaBigTitle }}</h2>
+        <button onClick="{{ goChat }}" style="font-family:'JetBrains Mono';font-size:15px;font-weight:700;color:#0d0e12;background:#FFD83D;border:2px solid #FFD83D;padding:15px 30px;cursor:pointer;box-shadow:5px 5px 0 #000;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;">{{ t.ctaChat }} →</button>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ===================== WHAT IS IT ===================== -->
+  <sc-if value="{{ isWhat }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:860px;margin:0 auto;padding:clamp(36px,6vw,70px) 24px 60px;">
+    <div style="font-family:'Press Start 2P';font-size:10px;color:#5c6370;margin-bottom:16px;">{{ t.whatKicker }}</div>
+    <h1 style="font-family:'VT323';font-size:clamp(44px,7vw,78px);line-height:.9;margin:0 0 26px;color:#e6e8ee;text-wrap:balance;">{{ t.whatTitle }}</h1>
+    <p style="font-size:clamp(16px,1.8vw,19px);line-height:1.7;color:#cfd3de;margin:0 0 40px;border-left:3px solid #FFD83D;padding-left:20px;">{{ t.whatLead }}</p>
+
+    <div style="background:#15171e;border:2px solid #2a2e3a;box-shadow:6px 6px 0 #000;padding:28px;margin-bottom:40px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="font-family:'Press Start 2P';font-size:9px;color:#FFD83D;">📖 {{ t.whatOriginTitle }}</span></div>
+      <p style="font-size:14.5px;line-height:1.75;color:#a7adba;margin:0;">{{ t.whatOrigin }}</p>
+    </div>
+
+    <h2 style="font-family:'VT323';font-size:clamp(32px,4.5vw,48px);margin:0 0 24px;color:#e6e8ee;">{{ t.methodTitle }}</h2>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:48px;">
+      <sc-for list="{{ methodSteps }}" as="m" hint-placeholder-count="4">
+        <div style="display:flex;gap:18px;align-items:flex-start;background:#15171e;border:2px solid #2a2e3a;box-shadow:4px 4px 0 #000;padding:20px 22px;">
+          <div style="font-family:'Press Start 2P';font-size:18px;color:#FFD83D;flex:none;line-height:1.2;">{{ m.k }}</div>
+          <div><h3 style="font-family:'VT323';font-size:28px;line-height:1;margin:0 0 6px;color:#e6e8ee;">{{ m.t }}</h3><p style="font-size:13.5px;line-height:1.6;color:#a7adba;margin:0;">{{ m.d }}</p></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <h2 style="font-family:'VT323';font-size:clamp(32px,4.5vw,48px);margin:0 0 18px;color:#e6e8ee;">{{ t.whyTitle }}</h2>
+    <sc-for list="{{ whyPars }}" as="par" hint-placeholder-count="2">
+      <p style="font-size:15px;line-height:1.75;color:#cfd3de;margin:0 0 16px;">{{ par }}</p>
+    </sc-for>
+
+    <div style="margin-top:34px;">
+      <button onClick="{{ goChat }}" style="font-family:'JetBrains Mono';font-size:15px;font-weight:700;color:#0d0e12;background:#FFD83D;border:2px solid #FFD83D;padding:15px 28px;cursor:pointer;box-shadow:5px 5px 0 #000;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;">🐤 {{ t.whatCta }}</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== CHAT ===================== -->
+  <sc-if value="{{ isChat }}" hint-placeholder-val="{{ true }}">
+  <div style="height:calc(100vh - 58px);display:flex;flex-direction:column;max-width:880px;margin:0 auto;width:100%;">
+    <div style="display:flex;align-items:center;gap:13px;padding:16px 22px;border-bottom:2px solid #2a2e3a;background:#15171e;">
+      <div style="width:42px;height:42px;flex:none;background:#0d0e12;border:2px solid #FFD83D;box-shadow:2px 2px 0 #F0B429;padding:3px;">{{ chick }}</div>
+      <div style="flex:1;">
+        <div style="font-family:'VT323';font-size:26px;line-height:1;color:#e6e8ee;">Pollito</div>
+        <div style="font-size:11.5px;color:#28c840;display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;background:#28c840;border-radius:50%;display:inline-block;"></span>{{ t.chatStatus }}</div>
+      </div>
+    </div>
+
+    <div ref="{{ msgsRef }}" style="flex:1;overflow-y:auto;padding:24px 22px;display:flex;flex-direction:column;gap:16px;background:linear-gradient(#0d0e12,#0d0e12);">
+      <sc-for list="{{ chatMessages }}" as="m" hint-placeholder-count="1">
+        <sc-if value="{{ m.isDuck }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:11px;align-items:flex-start;max-width:88%;animation:popin .22s ease;">
+            <div style="width:34px;height:34px;flex:none;background:#0d0e12;border:2px solid #2a2e3a;padding:2px;margin-top:2px;">{{ chick }}</div>
+            <div style="background:#15171e;border:2px solid #2a2e3a;box-shadow:3px 3px 0 #000;padding:13px 16px;font-size:14px;line-height:1.6;color:#e6e8ee;">{{ m.text }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:flex-end;animation:popin .22s ease;">
+            <div style="background:#FFD83D;border:2px solid #FFD83D;box-shadow:3px 3px 0 #000;padding:13px 16px;font-size:14px;line-height:1.6;color:#0d0e12;font-weight:500;max-width:80%;">{{ m.text }}</div>
+          </div>
+        </sc-if>
+      </sc-for>
+      <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:11px;align-items:center;">
+          <div style="width:34px;height:34px;flex:none;background:#0d0e12;border:2px solid #2a2e3a;padding:2px;">{{ chick }}</div>
+          <div style="background:#15171e;border:2px solid #2a2e3a;box-shadow:3px 3px 0 #000;padding:15px 18px;display:flex;gap:6px;">
+            <span style="width:8px;height:8px;background:#FFD83D;display:inline-block;animation:dotpulse 1s infinite;"></span>
+            <span style="width:8px;height:8px;background:#FFD83D;display:inline-block;animation:dotpulse 1s infinite .18s;"></span>
+            <span style="width:8px;height:8px;background:#FFD83D;display:inline-block;animation:dotpulse 1s infinite .36s;"></span>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="border-top:2px solid #2a2e3a;background:#15171e;padding:14px 18px 18px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.go }}" style="font-family:'JetBrains Mono';font-size:12px;color:#FFD83D;background:#0d0e12;border:2px solid #2a2e3a;padding:7px 12px;cursor:pointer;transition:border-color .12s,transform .1s;" style-hover="border-color:#FFD83D;transform:translateY(-1px);">{{ c.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-family:'JetBrains Mono';color:#FFD83D;font-weight:700;font-size:16px;flex:none;">$</span>
+        <input value="{{ input }}" onInput="{{ onInput }}" onKeyDown="{{ onKey }}" placeholder="{{ t.chatPlaceholder }}" style="flex:1;font-family:'JetBrains Mono';font-size:14px;color:#e6e8ee;background:#0d0e12;border:2px solid #2a2e3a;padding:13px 14px;outline:none;min-width:0;" style-focus="border-color:#FFD83D;" />
+        <button onClick="{{ send }}" style="font-family:'JetBrains Mono';font-size:14px;font-weight:700;color:#0d0e12;background:#FFD83D;border:2px solid #FFD83D;padding:13px 20px;cursor:pointer;box-shadow:3px 3px 0 #000;transition:transform .1s,box-shadow .1s;flex:none;" style-hover="transform:translate(-1px,-1px);box-shadow:4px 4px 0 #000;">{{ t.chatSend }}</button>
+      </div>
+      <div style="font-size:11px;color:#5c6370;margin-top:10px;text-align:center;">{{ t.chatHint }}</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== BLOG LIST ===================== -->
+  <sc-if value="{{ showBlogList }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1100px;margin:0 auto;padding:clamp(36px,6vw,66px) 24px 60px;">
+    <div style="font-family:'Press Start 2P';font-size:10px;color:#5c6370;margin-bottom:16px;">{{ t.blogKicker }}</div>
+    <h1 style="font-family:'VT323';font-size:clamp(48px,8vw,84px);line-height:.86;margin:0 0 10px;color:#e6e8ee;">{{ t.blogTitle }}</h1>
+    <p style="font-size:15px;color:#a7adba;margin:0 0 38px;">{{ t.blogLead }}</p>
+
+    <div onClick="{{ featured.open }}" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;background:#15171e;border:2px solid #2a2e3a;box-shadow:6px 6px 0 #000;margin-bottom:26px;cursor:pointer;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:9px 9px 0 #000;border-color:#FFD83D;">
+      <div style="background:#0d0e12;display:grid;place-items:center;padding:40px;border-right:2px solid #2a2e3a;min-height:200px;background-image:radial-gradient(circle at 50% 50%,rgba(255,216,61,0.10),transparent 60%);">
+        <div style="width:130px;animation:floaty 4s ease-in-out infinite;">{{ chick }}</div>
+      </div>
+      <div style="padding:30px;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:'Press Start 2P';font-size:8px;color:#0d0e12;background:#FFD83D;padding:5px 8px;align-self:flex-start;margin-bottom:16px;">{{ featured.cat }}</span>
+        <h2 style="font-family:'VT323';font-size:clamp(32px,4vw,44px);line-height:.95;margin:0 0 12px;color:#e6e8ee;">{{ featured.title }}</h2>
+        <p style="font-size:14px;line-height:1.6;color:#a7adba;margin:0 0 16px;">{{ featured.excerpt }}</p>
+        <div style="font-size:12px;color:#5c6370;">{{ featured.meta }}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;">
+      <sc-for list="{{ restPosts }}" as="p" hint-placeholder-count="3">
+        <div onClick="{{ p.open }}" style="background:#15171e;border:2px solid #2a2e3a;box-shadow:5px 5px 0 #000;padding:24px;cursor:pointer;display:flex;flex-direction:column;transition:transform .12s,box-shadow .12s;" style-hover="transform:translate(-2px,-2px);box-shadow:7px 7px 0 #000;border-color:#FFD83D;">
+          <span style="font-family:'Press Start 2P';font-size:8px;color:#FFD83D;border:1px solid #2a2e3a;padding:5px 7px;align-self:flex-start;margin-bottom:16px;">{{ p.cat }}</span>
+          <h3 style="font-family:'VT323';font-size:30px;line-height:.98;margin:0 0 10px;color:#e6e8ee;">{{ p.title }}</h3>
+          <p style="font-size:13px;line-height:1.6;color:#a7adba;margin:0 0 18px;flex:1;">{{ p.excerpt }}</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#5c6370;border-top:2px solid #2a2e3a;padding-top:14px;"><span>{{ p.meta }}</span><span style="color:#FFD83D;">{{ t.blogReadMore }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== ARTICLE ===================== -->
+  <sc-if value="{{ showArticle }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:720px;margin:0 auto;padding:clamp(30px,5vw,56px) 24px 70px;">
+    <button onClick="{{ closeArticle }}" style="font-family:'JetBrains Mono';font-size:13px;color:#FFD83D;background:transparent;border:2px solid #2a2e3a;padding:9px 14px;cursor:pointer;margin-bottom:30px;box-shadow:3px 3px 0 #000;transition:transform .1s,box-shadow .1s;" style-hover="transform:translate(-1px,-1px);box-shadow:4px 4px 0 #000;border-color:#FFD83D;">{{ t.blogBack }}</button>
+    <span style="font-family:'Press Start 2P';font-size:8px;color:#0d0e12;background:#FFD83D;padding:5px 8px;display:inline-block;margin-bottom:18px;">{{ article.cat }}</span>
+    <h1 style="font-family:'VT323';font-size:clamp(40px,6vw,68px);line-height:.9;margin:0 0 14px;color:#e6e8ee;text-wrap:balance;">{{ article.title }}</h1>
+    <div style="font-size:12.5px;color:#5c6370;margin-bottom:34px;border-bottom:2px solid #2a2e3a;padding-bottom:22px;">{{ article.meta }}</div>
+    <sc-for list="{{ articleBody }}" as="par" hint-placeholder-count="3">
+      <p style="font-size:16px;line-height:1.8;color:#cfd3de;margin:0 0 22px;">{{ par }}</p>
+    </sc-for>
+    <div style="display:flex;gap:14px;align-items:center;background:#15171e;border:2px solid #FFD83D;box-shadow:5px 5px 0 #000;padding:20px;margin-top:36px;">
+      <div style="width:52px;height:52px;flex:none;">{{ chick }}</div>
+      <div style="flex:1;"><p style="margin:0 0 12px;font-size:14px;color:#e6e8ee;line-height:1.5;">{{ t.articleOutro }}</p><button onClick="{{ goChat }}" style="font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:#0d0e12;background:#FFD83D;border:2px solid #FFD83D;padding:10px 16px;cursor:pointer;box-shadow:3px 3px 0 #000;">🐤 {{ t.ctaChat }}</button></div>
+    </div>
+  </div>
+  </sc-if>
+  </main>
+
+  <sc-if value="{{ notChat }}" hint-placeholder-val="{{ true }}">
+  <footer style="border-top:2px solid #2a2e3a;background:#15171e;padding:36px 24px;text-align:center;">
+    <div style="width:44px;height:44px;margin:0 auto 14px;">{{ chick }}</div>
+    <div style="font-family:'VT323';font-size:24px;color:#FFD83D;margin-bottom:6px;">{{ t.footerTag }}</div>
+    <div style="font-size:11.5px;color:#5c6370;font-family:'JetBrains Mono';">{{ t.footerNote }}</div>
+  </footer>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { route:'home', lang:'es', messages:[], input:'', typing:false, article:null };
+
+  constructor(props){ super(props); this.msgsRef = React.createRef(); this.rot = {}; }
+
+  componentDidMount(){ this.greet(); }
+  componentDidUpdate(prevP, prevS){
+    if(this.msgsRef.current && (prevS.messages !== this.state.messages || prevS.typing !== this.state.typing)){
+      this.msgsRef.current.scrollTop = this.msgsRef.current.scrollHeight;
+    }
+  }
+
+  // ---- pixel chick (Pollito) ----
+  chickEl(){
+    const map = [
+      "......1111......",
+      ".....122221.....",
+      "....12222221....",
+      "...1222222221...",
+      "..122222222221..",
+      "..125622256221..",
+      "..125522255221..",
+      ".12222222222221.",
+      ".12222444422221.",
+      ".12722444422721.",
+      "..122224422221..",
+      "..122222222221..",
+      "...1222222221...",
+      "....13333331....",
+      "......4..4......",
+      ".....44...44...."
+    ];
+    const col = {1:'#23262f',2:'#FFD83D',3:'#E9B62B',4:'#F08C1E',5:'#16181d',6:'#ffffff',7:'#FF9E7A'};
+    const rects = [];
+    map.forEach((row,y)=>{ for(let x=0;x<row.length;x++){ const c=row[x]; if(col[c]) rects.push(React.createElement('rect',{key:x+'_'+y,x:x,y:y,width:1.02,height:1.02,fill:col[c]})); } });
+    return React.createElement('svg',{viewBox:'0 0 16 16',width:'100%',height:'100%',shapeRendering:'crispEdges',style:{display:'block',filter:'drop-shadow(3px 4px 0 rgba(0,0,0,0.4))'}},rects);
+  }
+
+  // ---- chat engine ----
+  greet(){ this.setState({ messages:[{ from:'duck', text:this.banks()[this.state.lang].greet }] }); }
+
+  banks(){
+    return {
+      es:{
+        greet:"¡Hola caserito! 🐤 Soy Pollito, tu patito debugger boliviano. Contame tu bug despacito, línea por línea… vas a ver que lo encontrás solito.",
+        hi:["¡Elay, hola pues! ¿En qué andamos atorados hoy, jovencito?","¡Qué tal caserito! Sentate nomás y contame tu problema, con confianza."],
+        socratic:[
+          "A ver caserito, explicame línea por línea qué hace tu código. Sin saltarte nada, ¿ya?",
+          "¿Y qué esperabas que pasara justo ahí, pues? Contame con tus propias palabras.",
+          "Mmm… ¿estás bien seguro que esa variable tiene lo que vos creés? Revisá nomás.",
+          "Elay, ¿y antes funcionaba? ¿Qué le cambiaste últimamente, jovencito?",
+          "Despacito pe. ¿Qué dice EXACTO el error? Leémelo tal cual, sin resumir.",
+          "¿Ya probaste imprimir ese valor antes de que truene? Un console.log nunca está de más, casero.",
+          "¿Y esa función de verdad devuelve lo que creés… o nomás suponés, pues?",
+          "Seguí, seguí… ¿y qué pasa en la línea siguiente? No te frenes ahorita."
+        ],
+        bug:[
+          "Uh, un bug. Tranqui nomás. Empecemos: ¿en qué línea exacta explota la cosa?",
+          "A ver ese error… leémelo palabra por palabra. A veces ahí nomás está la respuesta, casero.",
+          "¿Es error de sintaxis o de lógica? O sea, ¿el código corre y hace mal, o ni arranca?",
+          "¿Reproducís el bug siempre, o solo a veces? Eso cambia harto el cuento, pues."
+        ],
+        frust:[
+          "Calma caserito… hasta los mejores se traban. Respirá hondo. Ahora contame de nuevo, despacito.",
+          "Ni modo pe, así es la programación. Tomate un apicito ☕ y volvemos con fuerza. Vos podés.",
+          "Tranquilo jovencito, no te rindás. Un bug a la vez. ¿Cuál es lo ÚLTIMO que sí funcionaba?"
+        ],
+        solved:[
+          "¡ELAY PUEJ! 🎉 ¿Viste? Yo solo te escuché… vos lo resolviste solito. Anótate esa, jovencito.",
+          "¡Eso pues, caserito! La magia del patito: explicar en voz alta y zás, aparece el error. Bien hecho.",
+          "¡Jallalla! Resuelto. Ahora andá a celebrar con una salteña que te la ganaste."
+        ],
+        thanks:[
+          "De nada nomás, para eso estamos los patitos. Cuando quieras volvés, caserito.",
+          "Tranqui pe, siempre a la orden. Chau, y que no te muerdan los bugs 🐤"
+        ]
+      },
+      en:{
+        greet:"Hey caserito! 🐤 I'm Pollito, your Bolivian debugger duck. Tell me your bug slowly, line by line… you'll find it yourself, you'll see.",
+        hi:["Elay, hello pues! What are we stuck on today, jovencito?","What's up, caserito! Sit down and tell me your problem, con confianza."],
+        socratic:[
+          "Alright caserito, walk me through your code line by line. Don't skip anything, ¿ya?",
+          "And what did you EXPECT to happen right there, pues? Tell me in your own words.",
+          "Hmm… are you really sure that variable holds what you think? Go check, nomás.",
+          "Elay, did it work before? What did you change last, jovencito?",
+          "Slow down, pe. What does the error say EXACTLY? Read it to me word for word.",
+          "Did you try printing that value before it crashes? A console.log never hurts, casero.",
+          "Does that function really return what you think… or are you just guessing, pues?",
+          "Keep going… what happens on the next line? Don't stop now, jovencito."
+        ],
+        bug:[
+          "Uh oh, a bug. Tranqui nomás. First: on which exact line does it blow up?",
+          "Let's see that error… read it to me word for word. The answer's often right there, casero.",
+          "Is it a syntax error or a logic one? Does the code run and misbehave, or not run at all?",
+          "Does it happen every time, or only sometimes? That changes the story a lot, pues."
+        ],
+        frust:[
+          "Easy, caserito… even the best get stuck. Breathe. Now tell me again, slowly.",
+          "Ni modo, pe — that's coding for you. Grab an api ☕ and we'll come back strong. You got this.",
+          "Don't give up, jovencito. One bug at a time. What's the LAST thing that actually worked?"
+        ],
+        solved:[
+          "ELAY PUEJ! 🎉 See? I just listened… YOU solved it. Chalk one up, jovencito.",
+          "That's it, caserito! Duck magic: say it out loud and bam, the bug appears. Well done.",
+          "Jallalla! Solved. Now go celebrate with a salteña — you earned it."
+        ],
+        thanks:[
+          "You're welcome, that's what us ducks are for. Come back anytime, caserito.",
+          "No worries, pe — always here. Chau, and may the bugs not bite 🐤"
+        ]
+      },
+      sv:{
+        greet:"Hej caserito! 🐤 Jag är Pollito, din bolivianska debug-anka. Berätta om din bugg långsamt, rad för rad… du kommer hitta den själv, ska du se.",
+        hi:["Elay, hej pues! Vad har vi fastnat på idag, jovencito?","Tjena caserito! Slå dig ner och berätta om ditt problem, med förtroende."],
+        socratic:[
+          "Okej caserito, gå igenom din kod rad för rad. Hoppa inte över nåt, ¿ya?",
+          "Och vad FÖRVÄNTADE du dig skulle hända just där, pues? Berätta med egna ord.",
+          "Hmm… är du säker på att den variabeln innehåller det du tror? Kolla efter, nomás.",
+          "Elay, fungerade det förut? Vad ändrade du senast, jovencito?",
+          "Lugn, pe. Vad står det EXAKT i felet? Läs det ordagrant för mig.",
+          "Provade du skriva ut värdet innan det kraschar? En console.log skadar aldrig, casero.",
+          "Returnerar funktionen verkligen det du tror… eller gissar du bara, pues?",
+          "Fortsätt… vad händer på nästa rad? Stanna inte nu, jovencito."
+        ],
+        bug:[
+          "Oj, en bugg. Tranqui nomás. Först: på vilken exakt rad smäller det?",
+          "Få se felet… läs det ordagrant. Svaret finns ofta precis där, casero.",
+          "Är det ett syntaxfel eller ett logikfel? Körs koden men gör fel, eller startar den inte alls?",
+          "Händer det varje gång, eller bara ibland? Det ändrar historien rätt mycket, pues."
+        ],
+        frust:[
+          "Lugn, caserito… även de bästa fastnar. Andas. Berätta igen, långsamt.",
+          "Ni modo, pe — så är det med kodning. Ta en api ☕ så kommer vi tillbaka starka. Du fixar det.",
+          "Ge inte upp, jovencito. En bugg i taget. Vad är det SISTA som faktiskt fungerade?"
+        ],
+        solved:[
+          "ELAY PUEJ! 🎉 Ser du? Jag bara lyssnade… DU löste det. Notera den, jovencito.",
+          "Där har vi det, caserito! Ankmagi: säg det högt och pang, buggen dyker upp. Bra jobbat.",
+          "Jallalla! Löst. Gå och fira med en salteña — du förtjänar den."
+        ],
+        thanks:[
+          "Varsågod, det är vad vi ankor är till för. Kom tillbaka när du vill, caserito.",
+          "Inga problem, pe — alltid här. Chau, och må buggarna inte bitas 🐤"
+        ]
+      }
+    };
+  }
+
+  classify(text){
+    const s = text.toLowerCase();
+    if(/(gracias|thank|thx)/.test(s)) return 'thanks';
+    if(/(funciona ya|ya funciona|resuelto|resolv[ií]|lo encontr|ya est[aá]|solved|fixed|works now|it works|found it)/.test(s)) return 'solved';
+    if(/(^hola|^hey|^hi\b|^hello|buenas|qu[eé] tal|saludos)/.test(s)) return 'hi';
+    if(/(no s[eé]|ayud|me rindo|odio|imposible|stuck|atorad|atasc|\bhelp\b|give up|frustr|cansad|tired|harto)/.test(s)) return 'frust';
+    if(/(bug|error|undefined|null|crash|falla|no corre|no funciona|no jala|exception|\bnan\b|broken|roto|trona|segfault)/.test(s)) return 'bug';
+    return 'socratic';
+  }
+
+  pick(cat){
+    const arr = this.banks()[this.state.lang][cat];
+    const i = (this.rot[cat]||0) % arr.length;
+    this.rot[cat] = i+1;
+    return arr[i];
+  }
+
+  userSend(text){
+    const t = (text||'').trim();
+    if(!t || this.state.typing) return;
+    this.setState(s=>({ messages:[...s.messages, {from:'user', text:t}], input:'', typing:true }));
+    const cat = this.classify(t);
+    setTimeout(()=>{
+      this.setState(s=>({ messages:[...s.messages, {from:'duck', text:this.pick(cat)}], typing:false }));
+    }, 750 + Math.random()*750);
+  }
+
+  // ---- content ----
+  data(){
+    const D = {
+      es:{
+        nav:{home:'Inicio', what:'¿Qué es?', chat:'Pollito', blog:'Blog'},
+        heroKicker:'// rubber_duck_debugging.exe',
+        heroTitleA:'Explícale tu bug a ', heroTitleB:'Pollito.',
+        heroSub:'El patito debugger más paciente de Bolivia. Le contás tu código línea por línea… y de repente, elay, encontrás el error solito. Sin juicios, sin apuro, con harto cariño.',
+        ctaChat:'Hablar con Pollito', ctaWhat:'¿Qué es esto?',
+        heroBubble:'— ¿Y luego qué pasa, pues?',
+        statsLine:'0 dependencias · 100% escucha · ∞ paciencia',
+        howKicker:'// cómo_funciona()', howTitle:'Tres pasos. Cero magia.', howSub:'(bueno… un poquito de magia)',
+        steps:[
+          {k:'01',t:'Contale tu problema',d:'Abrí el chat y saludá a Pollito. Siempre en línea, modo escucha activado.'},
+          {k:'02',t:'Explicá línea por línea',d:'Leele tu código en voz alta, despacito. Pollito te pregunta como buen caserito curioso.'},
+          {k:'03',t:'Encontrá el bug solito',d:'En algún momento te vas a frenar y… ¡elay! Ahí estaba. Pollito sonríe. Vos también.'}
+        ],
+        featKicker:'// por_qué_funciona', featTitle:'Un debugger que no te apura', featSub:'Pollito no te da la respuesta. Te ayuda a encontrarla.',
+        features:[
+          {i:'</>',t:'Habla tu idioma',d:'Explicale en español, en inglés o en puro spanglish. Pollito te entiende, caserito.'},
+          {i:'{ }',t:'Cero juicios',d:'No importa lo feo que esté tu código. Pollito ya lo vio todo y nunca se ríe… casi nunca.'},
+          {i:'[ ]',t:'Método socrático',d:'Preguntas que te hacen pensar, no respuestas masticadas que después no aprendés.'},
+          {i:'$_',t:'Siempre disponible',d:'3 de la mañana, deadline encima, café frío. Pollito sigue ahí, con la misma paciencia.'},
+          {i:'λ',t:'Personalidad boliviana',d:'Un patito con cariño, sus dichos y su paciencia de altura. 3.640 metros de calma.'},
+          {i:';',t:'Privado de verdad',d:'Lo que le contás a Pollito se queda entre vos y el patito. Sin nubes, sin chismes.'}
+        ],
+        testiKicker:'// testimonios.log', testiTitle:'Le creen a Pollito',
+        testimonials:[
+          {t:'“Llevaba 4 horas con un bug. Se lo expliqué a Pollito y en la línea 3 me callé solo. Era un punto y coma.”',name:'@dev_paceño',role:'Frontend · La Paz'},
+          {t:'“Mi terapeuta y Pollito. Ese es mi stack emocional ahora, pues.”',name:'@imilla.codes',role:'Backend · Cochabamba'},
+          {t:'“Le hablo más a Pollito que a mi equipo. Y me entiende mejor, caserito.”',name:'@santacruz.dev',role:'Fullstack · Santa Cruz'}
+        ],
+        ctaBigTitle:'¿Tenés un bug atorado? Pollito te escucha.',
+        footerTag:'Hecho con harto cariño y 0 dependencias.', footerNote:'pollito.debug() — un homenaje al pato de goma · 2026',
+        whatKicker:'// manual_del_patito.md', whatTitle:'¿Qué es el Rubber Duck Debugging?',
+        whatLead:'Es una técnica real, famosa y comprobada: explicar tu código en voz alta —línea por línea— a un objeto inanimado, como un patito de goma. Al forzarte a verbalizar lo que el código DEBERÍA hacer, tu cerebro nota lo que en realidad HACE. Y ahí cae el bug.',
+        whatOriginTitle:'El origen',
+        whatOrigin:'La historia aparece en el libro “The Pragmatic Programmer” (Andrew Hunt y David Thomas, 1999). Cuenta de un programador que cargaba un patito de goma y se obligaba a explicarle su código línea por línea. La mayoría de las veces, encontraba el error antes de terminar de explicar. No era el pato: era el acto de explicar.',
+        methodTitle:'El método, paso a paso',
+        methodSteps:[
+          {k:'01',t:'Conseguí un patito',d:'De goma, virtual, o uno boliviano llamado Pollito. Cualquiera sirve.'},
+          {k:'02',t:'Explicá tu intención',d:'Decile en voz alta qué se SUPONE que hace este código.'},
+          {k:'03',t:'Leé línea por línea',d:'Ahora recorré el código de verdad, una línea a la vez, explicando cada una.'},
+          {k:'04',t:'Escuchá el silencio',d:'En el momento en que lo que decís no coincide con lo que el código hace… ahí está tu bug.'}
+        ],
+        whyTitle:'¿Por qué funciona?',
+        whyPars:[
+          'Explicar en voz alta usa partes distintas del cerebro que leer en silencio. Te obliga a bajar la velocidad y a cuestionar suposiciones que dabas por ciertas.',
+          'No necesitás que el pato responda. Necesitás escucharte a vos mismo. Pollito solo te acompaña… y de vez en cuando, te tira una pregunta para que sigás.'
+        ],
+        whatCta:'Probá con Pollito ahora',
+        chatStatus:'en línea · modo escucha', chatPlaceholder:'Contale tu bug a Pollito…', chatSend:'Enviar',
+        chatHint:'Pollito no escribe tu código por vos — te ayuda a pensarlo. Esa es la gracia, pues.',
+        chips:['Tengo un bug 🐛','Mi código no corre','Me siento atorado','¡Ya lo resolví!'],
+        blogKicker:'// blog.pollito()', blogTitle:'El nido', blogLead:'Cuentos de bugs, debugging y patitos. Servido con cariño.',
+        blogReadMore:'Leer →', blogBack:'← Volver al nido',
+        articleOutro:'¿Te quedó algún bug rondando? Contámelo, caserito.',
+        readUnit:'min de lectura',
+        posts:[
+          {cat:'HISTORIA',title:'El día que un punto y coma me hizo llorar',excerpt:'4 horas, 1 café frío y un patito que no dijo nada. Crónica de un bug anunciado.',read:5,date:'12 jun 2026',feat:true,
+            body:['Eran las 2 de la mañana. El deploy en 6 horas. Y mi código, que ayer funcionaba perfecto, hoy se reía de mí con un “undefined is not a function”.',
+              'Revisé todo. Googleé. Pregunté en tres chats. Nada. Hasta que, derrotado, abrí el chat de Pollito y empecé a explicarle la función línea por línea, como quien le cuenta un secreto a un amigo.',
+              'En la línea 3 me callé. Ahí estaba. Un punto y coma fuera de lugar, mirándome fijo desde hacía 4 horas. Pollito no dijo nada. No hizo falta. Solo me escuchó hasta que yo mismo lo vi.']},
+          {cat:'TÉCNICA',title:'Cómo explicarle código a un objeto sin sentirte raro',excerpt:'Spoiler: al tercer día ya le ponés nombre y le contás cómo te fue en la daily.',read:4,date:'8 jun 2026',
+            body:['La primera vez se siente ridículo. Estás ahí, hablándole a un patito de goma (o a un dibujo de uno) como si te fuera a contestar.',
+              'El truco es tratarlo como a un colega junior muy educado: no sabe nada de tu proyecto, así que tenés que explicarle TODO desde cero. Esa obligación de no asumir nada es justo lo que destapa el bug.',
+              'Para el tercer día le habrás puesto nombre. Para el quinto, le contarás cómo te fue en la daily. Es normal. Bienvenido al club.']},
+          {cat:'CULTURA',title:'Por qué Pollito es boliviano (y no un pato cualquiera)',excerpt:'Paciencia de altura, dichos con sabor a api y cero apuro. Conocé a tu debugger.',read:3,date:'1 jun 2026',
+            body:['Pollito no es un pato genérico de stock. Tiene acento, tiene dichos y tiene la paciencia de quien vive a 3.640 metros y nada lo apura.',
+              'Te dice “caserito”, te manda a tomar un apicito cuando te frustrás, y celebra tus victorias con un “elay puej” que se siente como un abrazo.',
+              'Porque debuggear no debería ser frío. Debería sentirse como pedirle ayuda a un amigo en una esquina de El Alto: con cariño, con calma y con confianza.']},
+          {cat:'CIENCIA',title:'El efecto de explicar en voz alta, según la ciencia',excerpt:'Se llama “self-explanation effect” y tu patito lo usa sin saber leer un paper.',read:6,date:'24 may 2026',
+            body:['En psicología cognitiva se conoce como “self-explanation effect”: las personas que se explican algo a sí mismas mientras aprenden entienden y retienen mejor que las que solo leen.',
+              'Al verbalizar, tu cerebro detecta los huecos entre lo que crees que sabés y lo que realmente sabés. Esos huecos, en programación, suelen llamarse bugs.',
+              'Pollito no leyó el paper. Pero hace 27 años que los patitos aplican el método. La ciencia solo llegó después a darles la razón.']}
+        ]
+      },
+      en:{
+        nav:{home:'Home', what:'What is it?', chat:'Pollito', blog:'Blog'},
+        heroKicker:'// rubber_duck_debugging.exe',
+        heroTitleA:'Explain your bug to ', heroTitleB:'Pollito.',
+        heroSub:"Bolivia's most patient debugger duck. You read your code to him line by line… and suddenly, elay, you spot the bug yourself. No judgment, no rush, lots of cariño.",
+        ctaChat:'Talk to Pollito', ctaWhat:'What is this?',
+        heroBubble:'— And then what happens, pues?',
+        statsLine:'0 dependencies · 100% listening · ∞ patience',
+        howKicker:'// how_it_works()', howTitle:'Three steps. Zero magic.', howSub:'(okay… a tiny bit of magic)',
+        steps:[
+          {k:'01',t:'Tell him your problem',d:'Open the chat and say hi to Pollito. Always online, listening mode on.'},
+          {k:'02',t:'Explain line by line',d:'Read your code out loud, slowly. Pollito asks questions like a curious little caserito.'},
+          {k:'03',t:'Find the bug yourself',d:"At some point you'll pause and… elay! There it was. Pollito smiles. So do you."}
+        ],
+        featKicker:'// why_it_works', featTitle:'A debugger that never rushes you', featSub:"Pollito doesn't give you the answer. He helps you find it.",
+        features:[
+          {i:'</>',t:'Speaks your language',d:'Explain in Spanish, English or pure spanglish. Pollito gets you, caserito.'},
+          {i:'{ }',t:'Zero judgment',d:"Doesn't matter how ugly your code is. Pollito has seen it all and never laughs… almost never."},
+          {i:'[ ]',t:'Socratic method',d:"Questions that make you think — not spoon-fed answers you won't learn from."},
+          {i:'$_',t:'Always around',d:"3 a.m., deadline looming, cold coffee. Pollito's still there, same patience as ever."},
+          {i:'λ',t:'Bolivian personality',d:'A duck with cariño, his sayings and high-altitude patience. 3,640 meters of calm.'},
+          {i:';',t:'Truly private',d:'What you tell Pollito stays between you and the duck. No clouds, no gossip.'}
+        ],
+        testiKicker:'// testimonials.log', testiTitle:'They trust Pollito',
+        testimonials:[
+          {t:'“Spent 4 hours on a bug. Explained it to Pollito and went quiet on line 3. It was a semicolon.”',name:'@dev_paceño',role:'Frontend · La Paz'},
+          {t:"“My therapist and Pollito. That's my emotional stack now, pues.”",name:'@imilla.codes',role:'Backend · Cochabamba'},
+          {t:'“I talk to Pollito more than to my team. And he gets me better, caserito.”',name:'@santacruz.dev',role:'Fullstack · Santa Cruz'}
+        ],
+        ctaBigTitle:'Got a stuck bug? Pollito is listening.',
+        footerTag:'Made with lots of cariño and 0 dependencies.', footerNote:'pollito.debug() — a tribute to the rubber duck · 2026',
+        whatKicker:'// duck_manual.md', whatTitle:'What is Rubber Duck Debugging?',
+        whatLead:"It's a real, famous, proven technique: explaining your code out loud — line by line — to an inanimate object, like a rubber duck. By forcing yourself to verbalize what the code SHOULD do, your brain notices what it ACTUALLY does. And there's the bug.",
+        whatOriginTitle:'The origin',
+        whatOrigin:'The story appears in “The Pragmatic Programmer” (Andrew Hunt & David Thomas, 1999). It tells of a programmer who carried a rubber duck and forced himself to explain his code to it, line by line. Most of the time, he found the bug before he finished explaining. It wasn\'t the duck: it was the act of explaining.',
+        methodTitle:'The method, step by step',
+        methodSteps:[
+          {k:'01',t:'Get a duck',d:'Rubber, virtual, or a Bolivian one named Pollito. Any will do.'},
+          {k:'02',t:'State your intent',d:'Say out loud what this code is SUPPOSED to do.'},
+          {k:'03',t:'Read line by line',d:'Now walk through the real code, one line at a time, explaining each.'},
+          {k:'04',t:'Listen to the silence',d:"The moment what you say doesn't match what the code does… there's your bug."}
+        ],
+        whyTitle:'Why does it work?',
+        whyPars:[
+          'Speaking out loud uses different parts of the brain than silent reading. It forces you to slow down and question assumptions you took for granted.',
+          "You don't need the duck to answer. You need to hear yourself. Pollito just keeps you company… and now and then, tosses a question so you keep going."
+        ],
+        whatCta:'Try Pollito now',
+        chatStatus:'online · listening mode', chatPlaceholder:'Tell your bug to Pollito…', chatSend:'Send',
+        chatHint:"Pollito won't write your code for you — he helps you think it through. That's the whole point, pues.",
+        chips:['I have a bug 🐛',"My code won't run","I'm stuck",'I solved it!'],
+        blogKicker:'// blog.pollito()', blogTitle:'The nest', blogLead:'Tales of bugs, debugging and ducks. Served with cariño.',
+        blogReadMore:'Read →', blogBack:'← Back to the nest',
+        articleOutro:'Still got a bug buzzing around? Tell me about it, caserito.',
+        readUnit:'min read',
+        posts:[
+          {cat:'STORY',title:'The day a semicolon made me cry',excerpt:'4 hours, 1 cold coffee and a duck that said nothing. Chronicle of a foretold bug.',read:5,date:'Jun 12, 2026',feat:true,
+            body:["It was 2 a.m. Deploy in 6 hours. And my code, which worked perfectly yesterday, was laughing at me today with an “undefined is not a function”.",
+              'I checked everything. Googled. Asked in three chats. Nothing. Until, defeated, I opened Pollito\'s chat and started explaining the function line by line, like telling a secret to a friend.',
+              'On line 3 I went quiet. There it was. A misplaced semicolon, staring at me for 4 hours straight. Pollito said nothing. Didn\'t need to. He just listened until I saw it myself.']},
+          {cat:'TECHNIQUE',title:'How to explain code to an object without feeling weird',excerpt:"Spoiler: by day three you've named it and you tell it how your daily went.",read:4,date:'Jun 8, 2026',
+            body:["The first time feels ridiculous. There you are, talking to a rubber duck (or a drawing of one) as if it'll answer back.",
+              'The trick is to treat it like a very polite junior colleague: it knows nothing about your project, so you have to explain EVERYTHING from scratch. That obligation to assume nothing is exactly what uncovers the bug.',
+              "By day three you'll have named it. By day five, you'll tell it how your daily went. It's normal. Welcome to the club."]},
+          {cat:'CULTURE',title:'Why Pollito is Bolivian (and not just any duck)',excerpt:'High-altitude patience, sayings that taste like api, and zero rush. Meet your debugger.',read:3,date:'Jun 1, 2026',
+            body:["Pollito isn't a generic stock duck. He has an accent, he has sayings, and the patience of someone who lives at 3,640 meters and is never in a hurry.",
+              "He calls you “caserito”, sends you for an api when you get frustrated, and celebrates your wins with an “elay puej” that feels like a hug.",
+              'Because debugging shouldn\'t be cold. It should feel like asking a friend for help on a corner in El Alto: with cariño, calm, and trust.']},
+          {cat:'SCIENCE',title:'The out-loud effect, according to science',excerpt:"It's called the “self-explanation effect” and your duck uses it without reading a single paper.",read:6,date:'May 24, 2026',
+            body:["In cognitive psychology it's known as the “self-explanation effect”: people who explain something to themselves while learning understand and retain better than those who only read.",
+              'By verbalizing, your brain detects the gaps between what you think you know and what you actually know. In programming, those gaps are usually called bugs.',
+              'Pollito never read the paper. But ducks have applied the method for 27 years. Science just showed up later to prove them right.']}
+        ]
+      },
+      sv:{
+        nav:{home:'Hem', what:'Vad är det?', chat:'Pollito', blog:'Blogg'},
+        heroKicker:'// rubber_duck_debugging.exe',
+        heroTitleA:'Förklara din bugg för ', heroTitleB:'Pollito.',
+        heroSub:'Bolivias tålmodigaste debug-anka. Du läser din kod för honom rad för rad… och plötsligt, elay, ser du buggen själv. Inga domar, ingen stress, massor av cariño.',
+        ctaChat:'Prata med Pollito', ctaWhat:'Vad är det här?',
+        heroBubble:'— Och sen då, pues?',
+        statsLine:'0 beroenden · 100% lyssnande · ∞ tålamod',
+        howKicker:'// hur_det_funkar()', howTitle:'Tre steg. Noll magi.', howSub:'(okej… en liten gnutta magi)',
+        steps:[
+          {k:'01',t:'Berätta om ditt problem',d:'Öppna chatten och hälsa på Pollito. Alltid online, lyssnarläge på.'},
+          {k:'02',t:'Förklara rad för rad',d:'Läs din kod högt, långsamt. Pollito frågar som en nyfiken liten caserito.'},
+          {k:'03',t:'Hitta buggen själv',d:'Vid något tillfälle pausar du och… elay! Där var den. Pollito ler. Det gör du med.'}
+        ],
+        featKicker:'// varför_det_funkar', featTitle:'En debugger som aldrig stressar dig', featSub:'Pollito ger dig inte svaret. Han hjälper dig hitta det.',
+        features:[
+          {i:'</>',t:'Talar ditt språk',d:'Förklara på spanska, engelska, svenska eller ren spanglish. Pollito förstår dig, caserito.'},
+          {i:'{ }',t:'Noll domar',d:'Det spelar ingen roll hur ful din kod är. Pollito har sett allt och skrattar aldrig… nästan aldrig.'},
+          {i:'[ ]',t:'Sokratisk metod',d:'Frågor som får dig att tänka — inte färdigtuggade svar du inte lär dig nåt av.'},
+          {i:'$_',t:'Alltid där',d:'Kl 03, deadline närmar sig, kallt kaffe. Pollito är kvar, lika tålmodig som alltid.'},
+          {i:'λ',t:'Boliviansk personlighet',d:'En anka med cariño, sina talesätt och höghöjdstålamod. 3 640 meter av lugn.'},
+          {i:';',t:'Verkligt privat',d:'Det du berättar för Pollito stannar mellan dig och ankan. Inga moln, inget skvaller.'}
+        ],
+        testiKicker:'// omdömen.log', testiTitle:'De litar på Pollito',
+        testimonials:[
+          {t:'“Satt 4 timmar med en bugg. Förklarade den för Pollito och tystnade på rad 3. Det var ett semikolon.”',name:'@dev_paceño',role:'Frontend · La Paz'},
+          {t:'“Min terapeut och Pollito. Det är min känslomässiga stack nu, pues.”',name:'@imilla.codes',role:'Backend · Cochabamba'},
+          {t:'“Jag pratar mer med Pollito än med mitt team. Och han förstår mig bättre, caserito.”',name:'@santacruz.dev',role:'Fullstack · Santa Cruz'}
+        ],
+        ctaBigTitle:'Har du en bugg som fastnat? Pollito lyssnar.',
+        footerTag:'Gjord med massor av cariño och 0 beroenden.', footerNote:'pollito.debug() — en hyllning till gummiankan · 2026',
+        whatKicker:'// ank_manual.md', whatTitle:'Vad är Rubber Duck Debugging?',
+        whatLead:'Det är en verklig, känd och beprövad teknik: att förklara din kod högt — rad för rad — för ett livlöst föremål, som en gummianka. Genom att tvinga dig att verbalisera vad koden BORDE göra märker din hjärna vad den FAKTISKT gör. Och där är buggen.',
+        whatOriginTitle:'Ursprunget',
+        whatOrigin:'Berättelsen finns i boken ”The Pragmatic Programmer” (Andrew Hunt & David Thomas, 1999). Den handlar om en programmerare som bar med sig en gummianka och tvingade sig själv att förklara sin kod för den, rad för rad. För det mesta hittade han buggen innan han var klar med förklaringen. Det var inte ankan: det var själva förklarandet.',
+        methodTitle:'Metoden, steg för steg',
+        methodSteps:[
+          {k:'01',t:'Skaffa en anka',d:'Gummi, virtuell, eller en boliviansk som heter Pollito. Vilken som helst funkar.'},
+          {k:'02',t:'Säg din avsikt',d:'Säg högt vad den här koden SKA göra.'},
+          {k:'03',t:'Läs rad för rad',d:'Gå nu igenom den riktiga koden, en rad i taget, och förklara varje.'},
+          {k:'04',t:'Lyssna på tystnaden',d:'I det ögonblick det du säger inte stämmer med vad koden gör… där är din bugg.'}
+        ],
+        whyTitle:'Varför funkar det?',
+        whyPars:[
+          'Att tala högt använder andra delar av hjärnan än att läsa tyst. Det tvingar dig att sakta ner och ifrågasätta antaganden du tog för givna.',
+          'Du behöver inte att ankan svarar. Du behöver höra dig själv. Pollito håller dig bara sällskap… och då och då kastar han in en fråga så att du fortsätter.'
+        ],
+        whatCta:'Testa Pollito nu',
+        chatStatus:'online · lyssnarläge', chatPlaceholder:'Berätta om din bugg för Pollito…', chatSend:'Skicka',
+        chatHint:'Pollito skriver inte din kod åt dig — han hjälper dig tänka igenom den. Det är hela poängen, pues.',
+        chips:['Jag har en bugg 🐛','Min kod startar inte','Jag har fastnat','Jag löste det!'],
+        blogKicker:'// blog.pollito()', blogTitle:'Boet', blogLead:'Berättelser om buggar, debugging och ankor. Serverat med cariño.',
+        blogReadMore:'Läs →', blogBack:'← Tillbaka till boet',
+        articleOutro:'Har du fortfarande en bugg som surrar runt? Berätta för mig, caserito.',
+        readUnit:'min läsning',
+        posts:[
+          {cat:'BERÄTTELSE',title:'Dagen ett semikolon fick mig att gråta',excerpt:'4 timmar, 1 kallt kaffe och en anka som inte sa nåt. Krönika om en förutspådd bugg.',read:5,date:'12 jun 2026',feat:true,
+            body:['Klockan var 02 på natten. Deploy om 6 timmar. Och min kod, som fungerade perfekt igår, skrattade åt mig idag med ett ”undefined is not a function”.',
+              'Jag kollade allt. Googlade. Frågade i tre chattar. Inget. Tills jag, besegrad, öppnade Pollitos chatt och började förklara funktionen rad för rad, som att anförtro en hemlighet åt en vän.',
+              'På rad 3 tystnade jag. Där var den. Ett felplacerat semikolon, som stirrat på mig i 4 timmar. Pollito sa inget. Behövde inte. Han bara lyssnade tills jag själv såg det.']},
+          {cat:'TEKNIK',title:'Hur man förklarar kod för ett föremål utan att känna sig konstig',excerpt:'Spoiler: dag tre har du gett den ett namn och berättar hur din daily gick.',read:4,date:'8 jun 2026',
+            body:['Första gången känns det löjligt. Du sitter där och pratar med en gummianka (eller en teckning av en) som om den ska svara.',
+              'Knepet är att behandla den som en väldigt artig junior kollega: den vet inget om ditt projekt, så du måste förklara ALLT från början. Den skyldigheten att inte anta nåt är precis det som avslöjar buggen.',
+              'Dag tre har du gett den ett namn. Dag fem berättar du hur din daily gick. Det är normalt. Välkommen till klubben.']},
+          {cat:'KULTUR',title:'Varför Pollito är boliviansk (och inte vilken anka som helst)',excerpt:'Höghöjdstålamod, talesätt som smakar api, och noll stress. Lär känna din debugger.',read:3,date:'1 jun 2026',
+            body:['Pollito är ingen generisk stock-anka. Han har en brytning, han har talesätt, och tålamodet hos någon som bor på 3 640 meters höjd och aldrig har bråttom.',
+              'Han kallar dig ”caserito”, skickar dig efter en api när du blir frustrerad, och firar dina segrar med ett ”elay puej” som känns som en kram.',
+              'För debugging borde inte vara kallt. Det borde kännas som att be en vän om hjälp på ett gathörn i El Alto: med cariño, lugn och tillit.']},
+          {cat:'VETENSKAP',title:'Effekten av att förklara högt, enligt vetenskapen',excerpt:'Den kallas ”self-explanation effect” och din anka använder den utan att läsa en enda artikel.',read:6,date:'24 maj 2026',
+            body:['Inom kognitiv psykologi kallas det ”self-explanation effect”: personer som förklarar något för sig själva medan de lär sig förstår och minns bättre än de som bara läser.',
+              'Genom att verbalisera upptäcker din hjärna gapen mellan vad du tror att du kan och vad du faktiskt kan. Inom programmering brukar de gapen kallas buggar.',
+              'Pollito läste aldrig artikeln. Men ankor har använt metoden i 27 år. Vetenskapen kom bara senare och gav dem rätt.']}
+        ]
+      }
+    };
+    return D[this.state.lang];
+  }
+
+  go(route){ this.setState({route:route, article:null}); if(typeof window!=='undefined') window.scrollTo(0,0); }
+
+  renderVals(){
+    const d = this.data();
+    const route = this.state.route;
+    const chick = this.chickEl();
+    const navOrder = [['home',d.nav.home],['what',d.nav.what],['chat',d.nav.chat],['blog',d.nav.blog]];
+    const navBase = "font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;padding:7px 13px;cursor:pointer;border:2px solid #2a2e3a;box-shadow:3px 3px 0 #000;transition:transform .1s,box-shadow .1s;";
+    const navItems = navOrder.map(([id,label])=>{
+      const active = route===id;
+      const style = navBase + (active
+        ? "color:#0d0e12;background:#FFD83D;border-color:#FFD83D;"
+        : "color:#cfd3de;background:#1c1f29;");
+      return { label, style, go:()=>this.go(id) };
+    });
+
+    const langBtn = (on)=>"font-family:'JetBrains Mono';font-size:12px;font-weight:700;padding:7px 11px;cursor:pointer;border:none;"+(on?"background:#FFD83D;color:#0d0e12;":"background:transparent;color:#8b90a0;");
+
+    const posts = d.posts.map(p=>({ ...p, meta:p.date+' · '+p.read+' '+d.readUnit, open:()=>{ this.setState({article:p, route:'blog'}); if(typeof window!=='undefined') window.scrollTo(0,0); } }));
+    const featured = posts.find(p=>p.feat) || posts[0];
+    const restPosts = posts.filter(p=>!p.feat);
+
+    const chatMessages = this.state.messages.map((m,i)=>({ text:m.text, isDuck:m.from==='duck', isUser:m.from==='user', key:i }));
+    const chips = d.chips.map(label=>({ label, go:()=>{ this.setState({route:'chat'}); this.userSend(label); } }));
+
+    const art = this.state.article;
+
+    return {
+      chick,
+      t:{
+        navHome:d.nav.home, heroKicker:d.heroKicker, heroTitleA:d.heroTitleA, heroTitleB:d.heroTitleB,
+        heroSub:d.heroSub, ctaChat:d.ctaChat, ctaWhat:d.ctaWhat, heroBubble:d.heroBubble, statsLine:d.statsLine,
+        howKicker:d.howKicker, howTitle:d.howTitle, howSub:d.howSub,
+        featKicker:d.featKicker, featTitle:d.featTitle, featSub:d.featSub,
+        testiKicker:d.testiKicker, testiTitle:d.testiTitle, ctaBigTitle:d.ctaBigTitle,
+        footerTag:d.footerTag, footerNote:d.footerNote,
+        whatKicker:d.whatKicker, whatTitle:d.whatTitle, whatLead:d.whatLead, whatOriginTitle:d.whatOriginTitle,
+        whatOrigin:d.whatOrigin, methodTitle:d.methodTitle, whyTitle:d.whyTitle, whatCta:d.whatCta,
+        chatStatus:d.chatStatus, chatPlaceholder:d.chatPlaceholder, chatSend:d.chatSend, chatHint:d.chatHint,
+        blogKicker:d.blogKicker, blogTitle:d.blogTitle, blogLead:d.blogLead, blogReadMore:d.blogReadMore,
+        blogBack:d.blogBack, articleOutro:d.articleOutro
+      },
+      steps:d.steps, features:d.features, testimonials:d.testimonials, methodSteps:d.methodSteps, whyPars:d.whyPars,
+      navItems,
+      esStyle:langBtn(this.state.lang==='es'), enStyle:langBtn(this.state.lang==='en'), svStyle:langBtn(this.state.lang==='sv'),
+      setEs:()=>this.setState({lang:'es'}, ()=>{ if(this.state.messages.length<=1) this.greet(); }),
+      setEn:()=>this.setState({lang:'en'}, ()=>{ if(this.state.messages.length<=1) this.greet(); }),
+      setSv:()=>this.setState({lang:'sv'}, ()=>{ if(this.state.messages.length<=1) this.greet(); }),
+      goHome:()=>this.go('home'), goWhat:()=>this.go('what'), goChat:()=>this.go('chat'), goBlog:()=>this.go('blog'),
+      isHome:route==='home', isWhat:route==='what', isChat:route==='chat',
+      showBlogList:route==='blog' && !art, showArticle:route==='blog' && !!art, notChat:route!=='chat',
+      posts, featured, restPosts,
+      article:art, articleBody: art ? art.body : [],
+      chatMessages, typing:this.state.typing, chips,
+      input:this.state.input, msgsRef:this.msgsRef,
+      onInput:(e)=>this.setState({input:e.target.value}),
+      onKey:(e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); this.userSend(this.state.input); } },
+      send:()=>this.userSend(this.state.input),
+      closeArticle:()=>this.setState({article:null})
+    };
+  }
+}
+</script>
+</body>
+</html>
